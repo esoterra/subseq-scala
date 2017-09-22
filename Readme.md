@@ -1,8 +1,8 @@
 # SubSeq
 
-### Introduction
-
-SubSeq (short for Sub-Sequence) is a declarative parser framework for scala that allows users to combine Parsers together in an expressive syntax allowing you to parse virtually any Context Free Grammar in a straightforward manner
+SubSeq (short for Sub-Sequence) is a declarative parser framework for scala that allows users to combine 
+Parsers together in an expressive syntax allowing you to easily parse many different kinds of data.
+SubSeq is not restricted to parsing Strings and Characters, it can be used to parse sequences of any type of token.
 
 ### What is a Parser?
 
@@ -31,12 +31,19 @@ val n = p.parse("(1,2,3,4)").value            //equals: None
 
 ### Types of Parsers
 
-There are three main traits which implement Parses
+There are three main traits which implement Parses.
 
  * Consumes[T] extends Parses[T, Null]
  * Asserts[T] extends Parses[T, Boolean]
  * ParsesOptionally[T, V] extends Parses[T, Option[V]]
 
+Each of these defines a subset of all possible Parsers and have different behaviors. 
+
+A Consumer has output of type Null and cannot produce a meaningful value; so their only role is to remove tokens from the input Spliterator.
+
+An Assertion has output of type Boolean and comments on whether or not the input tokens meet some condition.
+
+An Optional Parser has output of type Option[V] and as a result is not guaranteed to produce a value. This is important because almost every parser has requirements the input must meet to parse correctly.
 
 ### Combining Parsers
 
@@ -48,7 +55,7 @@ The following examples produce identical results
 val a = IgnoreLW >> DigitParser
 val b = IgnoreLW thenDo DigitParser
 val c = IgnoreLW.>>(DigitParser)
-val d = IgnoreLW.thenDo(DigitPar
+val d = IgnoreLW.thenDo(DigitParser)
 ```
 
 ##### thenDo (">>")
@@ -77,8 +84,22 @@ val n = p.parse("2").value                    //equals: None
 The orUse operator connects two Assertions or two OptionalParsers. It results in either an Assertion or OptionalParser which will use the second of the two in the event that the first fails.
 
 ```Scala
-val p = 'A' || 'B'                             //is a Asserts[Char]
+val p = 'A' || 'B'                            //is a Asserts[Char]
 val y1 = p.parse("A").value                   //equals: true
 val y2 = p.parse("B").value                   //equals: true
 val n = p.parse("C").value                    //equals: false
 ```
+
+#### Concepts and Best Practices
+
+##### Immutability
+
+All parsers should be immutable. This enables us to re-use and recurse parsers in a reliable way
+so that we know the parsers we create will always behave as intended
+
+##### Failing Gracefully
+
+Exceptions should be avoided as a way to indicate that a parser has failed under normal circumstances. 
+If you are parsing a number but find a word then the preferred behavior would be to define your parser as a ParsesOptionally
+and return None instead of throwing an exception.
+Exceptions, if used, should be restricted to outcomes which represent errors not bad input.
