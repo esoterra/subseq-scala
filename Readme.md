@@ -103,3 +103,21 @@ Exceptions should be avoided as a way to indicate that a parser has failed under
 If you are parsing a number but find a word then the preferred behavior would be to define your parser as a ParsesOptionally
 and return None instead of throwing an exception.
 Exceptions, if used, should be restricted to outcomes which represent errors not bad input.
+
+*****
+
+#### Use
+
+The project is published under the MIT license and you may use it however you deem fit.
+If you have any questions about the library and using it feel free to contact me at kylebrw@gmail.com.
+It is not currently available as a maven repository, or a jar although that is something
+we would like to provide in the future.
+
+#### Contributing
+
+If you are interested in contributing feel free to join the 
+[project slack](https://join.slack.com/t/sub-seq/shared_invite/enQtMjQ3MTM4NDM2NTUxLTFiNzRlMjM0OWU0ZjYyZThhODllMTI4OTFkMzFiYTY4ZDg5ZDlhZDA4OGM1NmI0YTZiYzcyOTI5NTZiNDc5Y2E),
+message me at kylebrw@gmail.com or submit a pull request.
+I have created a github project for this repository which highlights my short-term goals,
+which mostly revolve around usability.
+
